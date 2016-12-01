@@ -1,5 +1,7 @@
 from __future__ import print_function
 
+## Author: David Cunningham
+
 import os
 from os import path
 import httplib2
@@ -18,7 +20,7 @@ except ImportError:
 CREDENTIALS_FILE_NAME = 'pydaemon-client.json'
 
 AUTH_LINK_ROOT = 'https://www.googleapis.com/auth'
-## TODO: Edit this path to your client secret file location
+## TODO: Set this path to your client secret file location
 client_secrets_dir = 'C:\\Dev\\api_credentials\\google'
 CLIENT_SECRET_FILE = path.join(client_secrets_dir, 'pydaemon_client_secret.json')
 APPLICATION_NAME = 'Py Daemon Test'
@@ -217,6 +219,10 @@ class ActivityEntry():
     build_name
 '''
 
+## ##  ##  ##  ## ##  ##  ## ##
+## ##  Utility Functions  ## ##
+## ##  ##  ##  ## ##  ##  ## ##
+
 def credentials_path():
     ''' Builds ~/.credentials directory and returns joined path of that and CREDENTIALS_FILE_NAME, which is used
         as the argument for oauth2client.file.Storage()'''
@@ -237,8 +243,6 @@ def get_service(entry_obj):
     Returns:
         desired service.
     '''
-
-
     # credential_path = os.path.join(credential_dir,
     #                               'drive-python-quickstart.json')
     cred_path = credentials_path()
@@ -256,37 +260,3 @@ def get_service(entry_obj):
     http = credentials.authorize(httplib2.Http())
     service = discovery.build(entry_obj.build_name, entry_obj.build_v, http=http)
     return service
-
-'''
-# TODO: Remove if get_service works well
-def get_credentials(entry_obj):
-    """Gets valid user credentials from storage.
-
-    If nothing has been stored, or if the stored credentials are invalid,
-    the OAuth2 flow is completed to obtain the new credentials.
-
-    Returns:
-        Credentials, the obtained credential.
-    """
-    home_dir = os.path.expanduser('~')
-    credential_dir = os.path.join(home_dir, '.credentials')
-    if not os.path.exists(credential_dir):
-        os.makedirs(credential_dir)
-    credential_path = os.path.join(credential_dir,
-                                   'pydaemon-client.json')
-
-    #credential_path = os.path.join(credential_dir,
-    #                               'drive-python-quickstart.json')
-
-    store = oauth2client.file.Storage(credential_path)
-    credentials = store.get()
-    if not credentials or credentials.invalid:
-        flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, entry_obj.scope)
-        flow.user_agent = APPLICATION_NAME
-        if flags:
-            credentials = tools.run_flow(flow, store, flags)
-        else: # Needed only for compatibility with Python 2.6
-            credentials = tools.run(flow, store)
-        print('Storing credentials to ' + credential_path)
-    return credentials
-'''
